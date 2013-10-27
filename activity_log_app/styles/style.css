@@ -1,3 +1,11 @@
 body {
 	background-color: #ccc;
 }
+
+
+ul#devices_connected, ul#devices_descovered {
+	margin: 0;
+	padding: 0;
+	line-height: 20px;
+	list-style: none;
+}
