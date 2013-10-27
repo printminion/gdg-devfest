@@ -48,61 +48,62 @@ function getServicesByAddress(adress) {
 function getProfilesForDevice(device) {
     console.log('getProfilesForDevice', device);
     chrome.bluetooth.getProfiles({device: device}, function(profiles) {
-        if(profiles === undefined) {
+        if (profiles === undefined) {
             return false;
         }
         console.log('displayProfiles', device, profiles);
 
         //if (device.address == "40:B0:FA:3F:A6:F5") {
         var uuid = profiles[0].uuid;
-        chrome.bluetooth.getLocalOutOfBandPairingData(function(foo) {
-            console.log("outofbonddata", foo);
-        });
+
         console.log('try to connect to device', {deviceAddress: device.address, serviceUuid: uuid});
         /**
          * device ( Device )
          The connection is made to |device|.
          profile ( Profile )
          */
-        
-        chrom.bluetooth.getDevices(profiles[0], function (dd) {
+
+        chrome.bluetooth.getDevices( {},function(dd) {
             console.log("DEVUG", dd);
         });
-            chrome.bluetooth.connect(
-            {device: device, profile: profiles[0]}, function() {
-                    if (chrome.runtime.lastError) {
-                    console.error("Error on connection.", chrome.runtime.lastError.message);
-                }
+        chrome.bluetooth.connect(
+                {device: device, profile: profiles[0]}, function() {
+            if (chrome.runtime.lastError) {
+                console.error("Error on connection.", chrome.runtime.lastError.message);
             }
-            );
-        
-            console.log("CONNECT TO :", profiles[0], device)
+        }
+        );
 
-            //}
+        console.log("CONNECT TO :", profiles[0], device)
+
+        //}
 
 
-        });
+    });
 }
 
-        var connectCallback = function(socket) {
-console.log('connectCallback', socket);
- if (socket) {
+var connectCallback = function(socket) {
+    console.log('connectCallback', socket);
+    if (socket) {
         console.log('Connected!  Socket ID is: ' + socket.id + ' on service ' + socket.serviceUuid);
 
     } else {
         console.log('Failed to connect.');
-    } };
-        var connectToDevice = function(result) {
+    }
+};
+var connectToDevice = function(result) {
     if (chrome.runtime.lastError) {
-    console.log('Error searching for a device to connect to.');
-        return;     }
+        console.log('Error searching for a device to connect to.');
+        return;
+    }
     if (result.length == 0) {
-    console.log('No devices found to connect to.');
-    return;
-        }     for (var i in result) {
+        console.log('No devices found to connect to.');
+        return;
+    }
+    for (var i in result) {
         var device = result[i];
         console.log('Connecting to device: ' + device.name + ' @ ' + device.address);
         chrome.bluetooth.connect(
-        {deviceAddress: device.address, serviceUuid: kUUID}, connectCallback);
+                {deviceAddress: device.address, serviceUuid: kUUID}, connectCallback);
     }
 };
