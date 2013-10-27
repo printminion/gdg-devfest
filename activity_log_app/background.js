@@ -67,21 +67,31 @@ function getProfilesForDevice(device) {
 
         //if (device.address == "40:B0:FA:3F:A6:F5") {
         var uuid = profiles[0].uuid;
+        chrome.bluetooth.getLocalOutOfBandPairingData(function(foo) {
+            console.log("outofbonddata", foo);
+        });
         console.log('try to connect to device', {deviceAddress: device.address, serviceUuid: uuid});
         /**
          * device ( Device )
          The connection is made to |device|.
          profile ( Profile )
          */
+        if (typeof(profiles) === "undefined") {
+            return false
+        }
         //for (var i in profiles) {
-            console.log("CONNECT TO :", profiles[0], device)
+        chrome.bluetooth.addProfile(profiles[0], function() {
+            console.log("added data");
             chrome.bluetooth.connect(
-                    {device: device, profile: profiles}, function() {
+                    {device: device, profile: profiles[0]}, function() {
                 if (chrome.runtime.lastError) {
                     console.error("Error on connection.", chrome.runtime.lastError.message);
                 }
             }
             );
+        });
+        console.log("CONNECT TO :", profiles[0], device)
+
         //}
 
 
