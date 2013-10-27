@@ -5,6 +5,11 @@ chrome.bluetooth.stopDiscovery(); //hack since we have no discovery timeout
 var deviceList = [];
 chrome.app.runtime.onLaunched.addListener(onLaunched);
 
+// onAdapterStateChanged callback (wifi card)
+chrome.bluetooth.onAdapterStateChanged.addListener(function(newStatus) {
+    console.log('onAdapterStateChanged:', arguments);
+});
+
 function recordDevice(device) {
   console.log("recordDevice", device);
   //getServicesByAddress(device.address);
@@ -36,14 +41,23 @@ function getServicesByAddress(adress) {
 		console.log('getServices', data);
 	});	
 }
+
 function getProfilesForDevice(device) {
 	console.log('getProfilesForDevice', device);
-	chrome.bluetooth.getProfiles({device : device }, displayDeviceProfiles);	
-}
-function displayDeviceProfiles(profiles){
-	console.log('displayProfiles', profiles);
+	chrome.bluetooth.getProfiles({device : device }, function(profiles){
+	 console.log('displayProfiles', device, profiles);
 
+   if (device.address == "38:0A:94:B7:09:C1") {
+    var uuid = profiles[0].uuid;
+
+    console.log('try to connect to device');
+    chrome.bluetooth.connect(
+        {deviceAddress: device.address, serviceUuid: uuid}, connectCallback);
+   }
+    
+  }); 
 }
+
 var connectCallback = function(socket) {
 	console.log('connectCallback', connectCallback);
 
