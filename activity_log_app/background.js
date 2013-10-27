@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 chrome.bluetooth.stopDiscovery(); //hack since we have no discovery timeout
 var deviceList = [];
-chrome.app.runtime.onLaunched.addListener(onLaunched);
+//chrome.app.runtime.onLaunched.addListener(onLaunched);
 
 // onAdapterStateChanged callback (wifi card)
 chrome.bluetooth.onAdapterStateChanged.addListener(function(newStatus) {
@@ -40,13 +40,14 @@ function getDevice(device){
 
 function devicesFound(){
   console.log("Devices found", deviceList);
+  UI.updateDevices(deviceList);
 }
 
 
 function onLaunched() {
   chrome.bluetooth.stopDiscovery(); //hack since we have no discovery timeout
   console.log("onLaunched:begin");
-  chrome.app.window.create('window.html', {'width': 400,'height': 500});
+  //chrome.app.window.create('window.html', {'width': 400,'height': 500});
   chrome.bluetooth.startDiscovery({deviceCallback: recordDevice});
   chrome.bluetooth.getDevices({deviceCallback: getDevice}, devicesFound);
   //chrome.bluetooth.stopDiscovery();
