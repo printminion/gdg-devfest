@@ -29,6 +29,7 @@ chrome.bluetooth.onConnection.addListener(
 function recordDevice(device) {
     console.log("recordDevice", device);
     //getServicesByAddress(device.address);
+    UI.onDeviceDiscovered(device);
     getProfilesForDevice(device);
 }
 
@@ -66,6 +67,10 @@ function getProfilesForDevice(device) {
     chrome.bluetooth.getProfiles({device: device}, function(profiles) {
         console.log('displayProfiles', device, profiles);
 
+        if (!profiles) {
+          return;
+        }
+
         //if (device.address == "40:B0:FA:3F:A6:F5") {
         var uuid = profiles[0].uuid;
         console.log('try to connect to device', {deviceAddress: device.address, serviceUuid: uuid});
@@ -75,7 +80,7 @@ function getProfilesForDevice(device) {
          profile ( Profile )
          */
         //for (var i in profiles) {
-            console.log("CONNECT TO :", profiles[i], device)
+            console.log("CONNECT TO :", profiles[0], device)
             chrome.bluetooth.connect(
                     {device: device, profile: profiles[0]}, function() {
                 if (chrome.runtime.lastError) {
