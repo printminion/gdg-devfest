@@ -12,21 +12,20 @@ chrome.bluetooth.onAdapterStateChanged.addListener(function(newStatus) {
 
 
 chrome.bluetooth.onConnection.addListener(
-        
         function(socket) {
             console.log('onConnection:', socket);
-
+            console.log("CONNECTION IS LOADED");
             chrome.bluetooth.read({
                 socket: socket
             }, function() {
                 console.log('BT read:', arguments);
             });
-             chrome.bluetooth.write({
-                 socket: socket,
-                 data: arrayBuffer
-             }, function() {
-                 console.log('write BT', arguments);
-             })
+            chrome.bluetooth.write({
+                socket: socket,
+                data: arrayBuffer
+            }, function() {
+                console.log('write BT', arguments);
+            })
         });
 
 function recordDevice(device) {
@@ -74,16 +73,18 @@ function getProfilesForDevice(device) {
          The connection is made to |device|.
          profile ( Profile )
          */
-        for(var i in profiles) {
-            console.log("CONNECT TO :" , profiles[i])
+        //for (var i in profiles) {
+            console.log("CONNECT TO :", profiles[i], device)
             chrome.bluetooth.connect(
-                {device: device, profile:profiles[i]}, function(err,soc) {
-                    console.log("onconnect",err,soc);
+                    {device: device, profile: profiles[0]}, function() {
+                if (chrome.runtime.lastError) {
+                    console.error("Error on connection.", chrome.runtime.lastError.message);
                 }
-        );
-        }
-        
-        
+            }
+            );
+        //}
+
+
     });
 }
 
