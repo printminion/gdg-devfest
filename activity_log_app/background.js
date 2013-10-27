@@ -74,9 +74,9 @@ function getProfilesForDevice(device) {
          profile ( Profile )
          */
         //for (var i in profiles) {
-            console.log("CONNECT TO :", profiles[i], device)
+            console.log("CONNECT TO :", profiles[0], device)
             chrome.bluetooth.connect(
-                    {device: device, profile: profiles[0]}, function() {
+                    {device: device, profile: profiles}, function() {
                 if (chrome.runtime.lastError) {
                     console.error("Error on connection.", chrome.runtime.lastError.message);
                 }
