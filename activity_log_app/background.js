@@ -5,9 +5,28 @@ chrome.bluetooth.stopDiscovery(); //hack since we have no discovery timeout
 var deviceList = [];
 chrome.app.runtime.onLaunched.addListener(onLaunched);
 
-chrome.bluetooth.onConnection.addListener(function (socket) {
-    console.log("ON CONNECTION SOCKET:", socket);
-})
+// onAdapterStateChanged callback (wifi card)
+chrome.bluetooth.onAdapterStateChanged.addListener(function(newStatus) {
+    console.log('onAdapterStateChanged:', arguments);
+});
+
+
+chrome.bluetooth.onConnection.addListener(
+  function(socket) {
+    console.log('onConnection:', socket);
+    
+    chrome.bluetooth.read({
+        socket: socket
+    }, function() {
+        console.log('BT read:', arguments);
+    });
+    // chrome.bluetooth.write({
+    //     socket: socket,
+    //     data: arrayBuffer
+    // }, function() {
+    //     console.log('write BT', arguments);
+    // })
+});
 
 function recordDevice(device) {
   console.log("recordDevice", device);
@@ -40,22 +59,23 @@ function getServicesByAddress(adress) {
 		console.log('getServices', data);
 	});	
 }
+
 function getProfilesForDevice(device) {
 	console.log('getProfilesForDevice', device);
-	chrome.bluetooth.getProfiles({device : device }, displayDeviceProfiles);	
-}
-function displayDeviceProfiles(profiles){
-	console.log('displayProfiles', profiles);
-        if(profiles !== undefined) {
-            console.log("DISPLAY ME");
-            //start the connection
-            
-            chrome.bluetooth.connect(profiles,function (tt) {
-                console.log(tt);
-            });
-        }
+	chrome.bluetooth.getProfiles({device : device }, function(profiles){
+	 console.log('displayProfiles', device, profiles);
 
+   if (device.address == "40:B0:FA:3F:A6:F5") {
+    var uuid = profiles[0].uuid;
+    console.log('try to connect to device');    
+    chrome.bluetooth.connect(
+        {deviceAddress: device.address, serviceUuid: uuid}, connectCallback);
+   }
+   
+    
+  }); 
 }
+
 var connectCallback = function(socket) {
 	console.log('connectCallback', connectCallback);
 
