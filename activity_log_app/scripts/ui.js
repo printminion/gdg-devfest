@@ -16,7 +16,7 @@ var UI = {
     updateDevices: function(devices) {
         console.log('UI.updateDevices', devices);
         for(var i in devices) {
-            $('#devices_connected').append('<li data-address="' + devices[i].address + '"><a href="/user/messages">' 
+            $('#devices_connected').html('').append('<li data-address="' + devices[i].address + '"><a href="/user/messages">' 
                 + devices[i].name + '</a> ' + devices[i].address + '</li>');
         }
     },
@@ -33,7 +33,14 @@ var UI = {
     stopScan: function() {
         console.log('UI.startScan');
     },
-
+    onAdapterStateChanged: function(status) {
+        console.log('UI.onAdapterStateChanged', status);
+        if (status.discovering) {
+            $('#devices_descovered').html();
+        }
+        var status = (status.discovering) ? 'discovering...' : 'idle';
+        $('#status').html(status);
+    },
 
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "Activity Log Test APP",
+  "name": "Bluetooth Test APP",
   "description": "Used to test Activity Log with an app",
   "version": "0.1",
   "app": {
@@ -7,5 +7,13 @@
       "scripts": ["main.js"]
     }
   },
-  "permissions": ["bluetooth"]
+  "permissions": [
+    {
+      "bluetooth":
+      [
+        { "uuid": "00001101-0000-1000-8000-00805f9b34fb" },
+        { "uuid": "1dd35050-a437-11e1-b3dd-0800200c9a66" }
+      ]
+    }
+  ]
 }
